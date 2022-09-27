@@ -2,7 +2,6 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 const style={
     orderhead:{
-        width:'360px',
         height:'52px',
         backgroundColor:'#FF616D'
     },
