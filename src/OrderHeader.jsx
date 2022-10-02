@@ -14,7 +14,7 @@ const style={
 }
 function OrderHeader(){
     return <>
-    <div style={style.orderhead} className='container-sm text-center'>
+    <div style={style.orderhead} className='container-sm sticky-top text-center'>
        <span style={style.brandname}>Sri Saravana</span>
     </div>
     </>
