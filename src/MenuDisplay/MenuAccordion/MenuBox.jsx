@@ -168,7 +168,7 @@ export const MenuBox = (props) => {
               remove={handledelete}
               quantity={quantity}
             />
-            {(added && !cart_reset) ? (
+            {added && !cart_reset ? (
               <button
                 disabled={(!selected || should_blur) && true}
                 id="addbtn"

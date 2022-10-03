@@ -1,9 +1,9 @@
-#addbtn{
-    background-color:lightgreen;
+#addbtn {
+  background-color: lightgreen;
 }
-#openbtn{
-    height:30px;
+#openbtn {
+  height: 30px;
 }
-#openbtn:focus{
-   border:none
+#openbtn:focus {
+  border: none;
 }
