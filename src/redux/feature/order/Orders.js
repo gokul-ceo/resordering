@@ -21,10 +21,31 @@ export const OrderSlice = createSlice({
             // console.log("OrderArray: ",{(state)=>state.OrderArray});
             
         },
-        updatequantity:(state,action)=>{
+        removeOrder:(state,action) => {
+            console.log("Item to added in final array: ",action.payload);
+            state.FinalyOrderArray.push(action.payload)
+            // console.log("Action Payload received to removeOrder: ",action.payload);
+            // state.FinalyOrderArray = action.payload
+            // if(action.payload!==undefined){
+            //     state.FinalyOrderArray.push(action.payload)
+            // }
             
+            // state.FinalyOrderArray = action.payload
+            // for(let i =0;i<state.OrderArray.length;i++){
+            //     console.log("OrderItems: ",state.OrderArray[i]);
+            //     if(state.OrderArray[i]!==orderItemName.payload){
+            //         state.FinalyOrderArray.push(state.OrderArray[i])
+            //     }
+            // }
+            // return {
+            //     ...state,
+
+            // }
+        },
+        resetOrderArray:(state)=>{
+            state.OrderArray=[]
         }
     }
 })
-export const {addorders,tempupdate,updatequantity} = OrderSlice.actions
+export const {addorders,removeOrder,resetOrderArray} = OrderSlice.actions
 export default OrderSlice.reducer;

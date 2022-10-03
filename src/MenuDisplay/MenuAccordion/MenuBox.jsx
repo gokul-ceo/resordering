@@ -4,10 +4,13 @@ import img from './image.png'
 import './MenuBox.css'
 import AddQuantity from "./Addquantity";
 import { useDispatch, useSelector } from "react-redux";
-import { addorders, updatequantity } from "../../redux/feature/order/Orders";
+import { addorders} from "../../redux/feature/order/Orders";
 import { decrement, increment } from "../../redux/feature/Quantity/quantitySlice";
 import { addamount, reduceamount } from "../../redux/feature/total/totalSlice";
-import { updatearray } from "../../cart/cart";
+import { infomcartclick } from "../../redux/Global/globalstate";
+// import { RemoveOrderfromarray } from "../../cart/cart";
+// import { removeOrderfromarray } from "../../cart/cart";
+// import { updatearray } from "../../cart/cart";
 // import { addamount } from "../../redux/feature/total/totalSlice";
 // import { addamount, reduceamount } from "../../redux/feature/total/totalSlice";
 // import { useDispatch,useSelector } from "react-redux";
@@ -26,6 +29,8 @@ const style = {
 }
 var total = 0;
 export const MenuBox = (props) => {
+    const should_blur = useSelector(state=>state.Gstate.iscartclicked)
+
 //     function Toast(){
 //         // <!-- Flexbox container for aligning the toasts -->
 // <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
@@ -49,29 +54,32 @@ export const MenuBox = (props) => {
     const itemName = props.name
     // const dispatch = useDispatch()
     const cartquantity = useSelector(state=>state.quantity.value)
-   
-    
+
     // const[total,settotal] = useState(0)
     // const finalyarray = useSelector(state=>state.orders.FinalyOrderArray)
+    // const[index,setindex]=useState(0)
     const orderarr = useSelector(state=>state.orders.OrderArray)
     const[added,setadd]=useState(false)
-    const[quantity,setquantity] = useState(1)
+    const[quantity,setquantity] = useState(0)
+    const[selected,setselected]=useState(false)
+    const cart_reset = useSelector(state=>state.cart_reset.value)
     // const orderarr=[Name,quantity]
     // const[order,setorder] = useState({Name,quantity,price})
     const[prevtotal,setprevioustotal] = useState(0)
     const cartitems = useSelector(state=>state.orders.OrderArray)
+    // console.log("checking exported cartitems: ",cartitems);
+   
     function handleinc(){
-        if(added){
+
+        setselected(true)
 
         
         setquantity(quantity+1)
        
        
         setprevioustotal(total)
-       dispatch(updatequantity({itemName,quantity}))
-        }else{
-            console.log("Item is not added in cart");
-        }
+    //    dispatch(updatequantity({itemName,quantity}))
+       
         console.log("Testing: ",orderarr[1]);
         // settotal(total * price)
         // console.log('Quantity: ',quantity);
@@ -82,27 +90,35 @@ export const MenuBox = (props) => {
     }
     
     function handledec(){
-        if(added){
-        if(quantity!==0&&quantity!==1){setquantity(quantity-1)}
         
-        
-        setprevioustotal(total)
-        }else{
-            console.log("Item is not added in cart");
-        }
+        if(quantity!==0){setquantity(quantity-1)}
+        // if(quantity!==0&&quantity!==1){setquantity(quantity-1)}
+       
        
 
     }
     function handledelete(){
+        setselected(false)
         setadd(false)
+        setadd(false)
+        setquantity(0)
+        // RemoveOrderfromarray(itemName)
         if(cartquantity>0){
         dispatch(decrement())
         }
+        dispatch(infomcartclick())
+
+        // dispatch(removeOrder(props.name))
     }
     useEffect(()=>{
         setquantity(quantity)
         // setorder({Name,quantity})
     },[quantity,itemName,price])
+    useEffect(()=>{
+        setquantity(0)
+        setselected(false)
+        setadd(false)
+    },[cart_reset])
     //------------------------------------ Handle Add Function ---------------------------------------------------------//
     function handleadd(){
         
@@ -112,10 +128,11 @@ export const MenuBox = (props) => {
         total=quantity*price;
         dispatch(reduceamount(prevtotal))
         dispatch(addamount(total))
-        dispatch(addorders({[itemName]:{Quantity:quantity,Price:price}}))
+        dispatch(addorders({ITEM:{Name:itemName,Quantity:quantity,Price:price}}))
         console.log("CartItems in MenuBox: ",cartitems);
         console.log("OrderArray: ",orderarr);
-        updatearray(itemName)
+        // removeOrderfromarray(props.name)
+
 
         // <Toast/>
         // console.log("Total: ",total);
@@ -127,7 +144,7 @@ export const MenuBox = (props) => {
         // console.log(ORDER_ARRAY);
         
     }
-
+    
 
     // const result = useSelector(state=>state.orders.OrderArray)
     return <>
@@ -141,8 +158,8 @@ export const MenuBox = (props) => {
         <div className="container-sm col text-end">
             <span>₹7.99</span><span style={style.note} className="text-muted"> */piece</span>
             {/* <h6 className="text-muted">*min 3pcs required</h6> */}
-            <AddQuantity action add={handleinc} sub={handledec} remove={handledelete} quantity={quantity}/>
-            {added?<button id="addbtn" className="btn btn-sm my-3 ">✅Added</button>:<button id="addbtn" onClick={handleadd} className="btn btn-sm my-3 ">Add</button>}
+            <AddQuantity hide={added} add={handleinc} sub={handledec} remove={handledelete} quantity={quantity}/>
+            {added?<button disabled={(!selected||should_blur)&&true} id="addbtn" className="btn btn-sm my-3 ">✅Added</button>:<button disabled={(!selected||should_blur)&&true} id="addbtn" onClick={handleadd} className="btn btn-sm my-3 ">Add</button>}
         </div>
         </div>
     </div>

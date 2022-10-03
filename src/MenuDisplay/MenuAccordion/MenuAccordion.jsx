@@ -2,10 +2,21 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MenuBox } from "./MenuBox";
 import './MenuBox.css'
+import { useSelector } from "react-redux";
 
 function MenuAccordion(props){
+    const should_blur = useSelector(state=>state.Gstate.iscartclicked)
+  const style={
+    blurmaindiv:{
+      filter:'blur(4px)',
+      overflow:'hidden',
+    }
+  }
+  // useEffect(()=>{
+  //   document.body.style.overflow="hidden";
+  // },[should_blur])
     return <>
-    <div style={{zIndex:0}} className="accordion my-3" id="accordionPanelsStayOpenExample">
+    <div style={should_blur?style.blurmaindiv:null} className="accordion my-3" id="accordionPanelsStayOpenExample">
   <div className="accordion-item" id="accordion-title">
     <h2 className="accordion-header" id="panelsStayOpen-headingOne">
       <button className="accordion-button" id="openbtn" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">

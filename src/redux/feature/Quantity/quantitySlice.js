@@ -13,11 +13,14 @@ export const quantitySlice = createSlice({
         },
         incrementByAmount: (state,action) => {
             state.value += action.payload
+        },
+        resetquantity:(state)=>{
+            state.value=0
         }
     }
 })
 
 
-export const {increment,decrement,incrementByAmount} = quantitySlice.actions
+export const {increment,decrement,incrementByAmount,resetquantity} = quantitySlice.actions
 
 export default quantitySlice.reducer;
