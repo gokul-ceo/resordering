@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetOrderArray } from "../redux/feature/order/Orders";
 import { resetquantity } from "../redux/feature/Quantity/quantitySlice";
-import { informreset } from "../redux/feature/reset/reset";
+import { informreset, INFO_RESET_DONE } from "../redux/feature/reset/reset";
 import { resettotal } from "../redux/feature/total/totalSlice";
 import { infomcartclick } from "../redux/Global/globalstate";
 import "./cart.css";
@@ -20,12 +20,16 @@ export function Cart() {
     setopen(open);
   }, [open]);
   function resetcart() {
+    dispatch(infomcartclick());
+    dispatch(informreset());
     dispatch(resettotal());
     dispatch(resetOrderArray());
     dispatch(resetquantity());
-    dispatch(informreset());
+    
     setopen(false);
-    dispatch(infomcartclick());
+
+    dispatch(INFO_RESET_DONE())
+    
   }
   // for (let index = 0; index < cartitems.length; index++) {
   //     // console.log("Cartitems individual: ",cartitems[index]);
@@ -84,6 +88,7 @@ export function Cart() {
               <tr>
                 <th scope="col">Item</th>
                 <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
               </tr>
             </thead>
             <tbody>
@@ -93,6 +98,7 @@ export function Cart() {
                     <tr key={i.id}>
                       <td>{i.ITEM.Name}</td>
                       <td>{i.ITEM.Quantity}</td>
+                      <td>{i.ITEM.Price}</td>
                     </tr>
                   </Fragment>
                 );

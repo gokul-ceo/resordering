@@ -1,10 +1,14 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import MenuAccordion from "./MenuAccordion/MenuAccordion";
+import MenuAccordion from "./MenuAccordion";
+
 function MenuDisplay() {
+ 
   return (
     <>
-      <MenuAccordion />
+    <div className="overflow-auto">
+    <MenuAccordion />
+    </div>
     </>
   );
 }

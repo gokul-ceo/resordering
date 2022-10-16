@@ -3,8 +3,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { MenuBox } from "./MenuBox";
 import "./MenuBox.css";
 import { useSelector } from "react-redux";
-
-function MenuAccordion(props) {
+import idlyimg from './idly.png'
+import dosaimg from './dosa.png'
+import vadaiimg from './vadai.png'
+import pooriimg from './poori.png'
+// import axios from 'axios'
+// import {socket} from './socket.js'
+// const Menulist = []
+function MenuAccordion() {
+//  axios.get("http://localhost:4000/")
+//  .then(function(response){
+//   console.log("Response from server: ",response);
+//   Menulist.push(response.data);
+//   for(let i=0;i<=Menulist.length;i++){
+//     console.log("Menulistitems: ",Menulist);
+//   }
+//  })
   const should_blur = useSelector((state) => state.Gstate.iscartclicked);
   const style = {
     blurmaindiv: {
@@ -12,9 +26,16 @@ function MenuAccordion(props) {
       overflow: "hidden",
     },
   };
-  // useEffect(()=>{
-  //   document.body.style.overflow="hidden";
-  // },[should_blur])
+  // socket.on("menulist",(arg)=>{
+  //   console.log("Menu recieved from server: ",arg);
+  //   Menulist.push(arg)
+
+  // })
+  // for(let i=0;i<=Menulist.length;i++){
+  //   console.log(Menulist[i]);
+  // }
+ 
+  // console.log("Menu list from socket: ",menulist);
   return (
     <>
       <div
@@ -33,7 +54,7 @@ function MenuAccordion(props) {
               aria-expanded="true"
               aria-controls="panelsStayOpen-collapseOne"
             >
-              Idly's
+              Idly types
             </button>
           </h2>
           <div
@@ -42,11 +63,11 @@ function MenuAccordion(props) {
             aria-labelledby="panelsStayOpen-headingOne"
           >
             <div className="accordion-body">
-              <MenuBox price={"5"} name={"Idly"} />
-              <MenuBox price={"5"} name={"Dosa"} />
-              <MenuBox price={"5"} name={"Vadai"} />
-              <MenuBox price={"5"} name={"pongal"} />
-              <MenuBox price={"5"} name={"masala dosai"} />
+              <MenuBox price={"5"} img={idlyimg} name={"Idly"} />
+              <MenuBox price={"5"} img={dosaimg} name={"Dosa"} />
+              <MenuBox price={"5"} img={vadaiimg} name={"Vadai"} />
+              <MenuBox price={"5"} img={pooriimg} name={"pongal"} />
+              <MenuBox price={"5"} img={idlyimg} name={"masala dosai"} />
             </div>
           </div>
         </div>
@@ -70,11 +91,11 @@ function MenuAccordion(props) {
             aria-labelledby="panelsStayOpen-headingTwo"
           >
             <div className="accordion-body">
+              {/* <MenuBox />
               <MenuBox />
               <MenuBox />
               <MenuBox />
-              <MenuBox />
-              <MenuBox />
+              <MenuBox /> */}
             </div>
           </div>
         </div>
@@ -98,11 +119,11 @@ function MenuAccordion(props) {
             aria-labelledby="panelsStayOpen-headingThree"
           >
             <div className="accordion-body">
+              {/* <MenuBox />
               <MenuBox />
               <MenuBox />
               <MenuBox />
-              <MenuBox />
-              <MenuBox />
+              <MenuBox /> */}
             </div>
           </div>
         </div>

@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import img from "./image.png";
+// import img from "./image.png";
 import "./MenuBox.css";
 import AddQuantity from "./Addquantity";
 import { useDispatch, useSelector } from "react-redux";
-import { addorders } from "../../redux/feature/order/Orders";
+import { addorders } from "../redux/feature/order/Orders";
+// import { socketContext } from "../App";
+import socket from "../socket";
+
+
 import {
   decrement,
   increment,
-} from "../../redux/feature/Quantity/quantitySlice";
-import { addamount, reduceamount } from "../../redux/feature/total/totalSlice";
-import { infomcartclick } from "../../redux/Global/globalstate";
+} from "../redux/feature/Quantity/quantitySlice";
+import { addamount } from "../redux/feature/total/totalSlice";
+import { infomcartclick } from "../redux/Global/globalstate";
 // import { RemoveOrderfromarray } from "../../cart/cart";
 // import { removeOrderfromarray } from "../../cart/cart";
 // import { updatearray } from "../../cart/cart";
@@ -32,6 +36,14 @@ const style = {
 };
 var total = 0;
 export const MenuBox = (props) => {
+  const[verified,setverified] = useState(false)
+  // const socket = useContext(socketContext)
+  // console.log("socket: ",socket);
+  const Name = props.name;
+  if(!verified){
+  socket.emit("verifyitem",`Recievd Item:${Name}`)
+  setverified(true)
+  }
   const should_blur = useSelector((state) => state.Gstate.iscartclicked);
 
   //     function Toast(){
@@ -57,6 +69,7 @@ export const MenuBox = (props) => {
   const itemName = props.name;
   // const dispatch = useDispatch()
   const cartquantity = useSelector((state) => state.quantity.value);
+  const cartopend = useSelector((state)=>state.Gstate.iscartclicked)
 
   // const[total,settotal] = useState(0)
   // const finalyarray = useSelector(state=>state.orders.FinalyOrderArray)
@@ -65,11 +78,22 @@ export const MenuBox = (props) => {
   const [added, setadd] = useState(false);
   const [quantity, setquantity] = useState(0);
   const [selected, setselected] = useState(false);
+
   const cart_reset = useSelector((state) => state.cart_reset.value);
+  // useEffect(()=>{
+  // if(!verified){
+  //   socket.emit("verifyitem",'testing verifyitem')
+  //   console.log("Emit sent");
+  // }
+  // setverified(true)
+  // },[])
+  // socket.on("verifyitem",'hello')
+  // const[reseted,setreseted]=useState(cart_reset)
   // const orderarr=[Name,quantity]
   // const[order,setorder] = useState({Name,quantity,price})
-  const [prevtotal, setprevioustotal] = useState(0);
+  // console.log("Value of cart_reset: ",cart_reset);
   const cartitems = useSelector((state) => state.orders.OrderArray);
+
   // console.log("checking exported cartitems: ",cartitems);
 
   function handleinc() {
@@ -77,7 +101,6 @@ export const MenuBox = (props) => {
 
     setquantity(quantity + 1);
 
-    setprevioustotal(total);
     //    dispatch(updatequantity({itemName,quantity}))
 
     console.log("Testing: ", orderarr[1]);
@@ -110,19 +133,29 @@ export const MenuBox = (props) => {
   useEffect(() => {
     setquantity(quantity);
     // setorder({Name,quantity})
-  }, [quantity, itemName, price]);
+    // setreseted(cart_reset)
+    // console.log("CART_RESET = ",cart_reset);
+  }, [quantity, itemName, price,]);
   useEffect(() => {
     setquantity(0);
-    setselected(false);
-    setadd(false);
-  }, [cart_reset]);
+    setselected(false)
+    setadd(false);  
+   
+    // console.log("value of cartreset: ",cart_reset);
+    // setreseted(cart_reset)
+  }, [cart_reset,cartopend]);
   //------------------------------------ Handle Add Function ---------------------------------------------------------//
   function handleadd() {
+    // if(quantity!==0){
+    // console.log("It working bruhh!!....");
+    // socket.emit("verifyitem",'testing verify items')
+    // }
+    console.log(socket);
     dispatch(increment());
     setadd(true);
     // console.log('order: ',order);
     total = quantity * price;
-    dispatch(reduceamount(prevtotal));
+    // dispatch(reduceamount(prevtotal));
     dispatch(addamount(total));
     dispatch(
       addorders({ ITEM: { Name: itemName, Quantity: quantity, Price: price } })
@@ -138,6 +171,8 @@ export const MenuBox = (props) => {
 
     // console.log("Result OrderArray: ",result);
     // console.log(ORDER_ARRAY);
+    // socket.emit("verifyitem",'testing verifyitem')
+
   }
 
   // const result = useSelector(state=>state.orders.OrderArray)
@@ -146,7 +181,7 @@ export const MenuBox = (props) => {
       <div className="container-sm ">
         <div className="row">
           <div className="container-sm col">
-            <img style={style.image} src={img} alt="image_png" />
+            <img style={style.image} src={props.img} alt="image_png" />
             <h6 className="w-50 my-2">{props.name}</h6>
             <span
               style={{ fontSize: "12px", position: "relative", top: "-8px" }}
@@ -168,7 +203,7 @@ export const MenuBox = (props) => {
               remove={handledelete}
               quantity={quantity}
             />
-            {added && !cart_reset ? (
+            {added?(
               <button
                 disabled={(!selected || should_blur) && true}
                 id="addbtn"

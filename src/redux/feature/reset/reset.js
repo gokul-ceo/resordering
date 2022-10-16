@@ -8,9 +8,14 @@ export const resetSlice = createSlice({
   reducers: {
     informreset: (state) => {
       state.value = true;
+      console.log("Cart reset has been noted!!");
     },
+    INFO_RESET_DONE: (state) => {
+      state.value = false;
+      console.log("Cart reset has been reseted");
+    }
   },
 });
 
-export const { informreset } = resetSlice.actions;
+export const { informreset,INFO_RESET_DONE } = resetSlice.actions;
 export default resetSlice.reducer;
