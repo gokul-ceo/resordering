@@ -30,6 +30,9 @@ export function save_user_details(Name,phno){
     localStorage.setItem('Phone',phno)
 
 }
+export function save_sockid(id){
+    localStorage.setItem("Id",id)
+}
 window.onload=(event) =>{
     socket.emit("loadevent","loaded successfully!!")
     console.log("load_user_details:",load_user_details());

@@ -19,12 +19,20 @@ function MenuAccordion() {
 //     console.log("Menulistitems: ",Menulist);
 //   }
 //  })
-  const should_blur = useSelector((state) => state.Gstate.iscartclicked);
+  // const should_blur = useSelector((state) => state.Gstate.iscartclicked);
   const style = {
     blurmaindiv: {
       filter: "blur(4px)",
       overflow: "hidden",
     },
+    accordionbtn:{
+      backgroundColor:'#FFD1D1',
+      border:'none',
+      Outline:'none',
+      color:'#E26868'
+
+    }
+   
   };
   // socket.on("menulist",(arg)=>{
   //   console.log("Menu recieved from server: ",arg);
@@ -39,14 +47,15 @@ function MenuAccordion() {
   return (
     <>
       <div
-        style={should_blur ? style.blurmaindiv : null}
+        // style={s? style.blurmaindiv : null}
         className="accordion my-3"
         id="accordionPanelsStayOpenExample"
       >
         <div className="accordion-item" id="accordion-title">
-          <h2 className="accordion-header" id="panelsStayOpen-headingOne">
+          <h2 className="accordion-header text-danger " id="panelsStayOpen-headingOne">
             <button
-              className="accordion-button"
+              style={style.accordionbtn}
+              className="accordion-button "
               id="openbtn"
               type="button"
               data-bs-toggle="collapse"
@@ -75,6 +84,7 @@ function MenuAccordion() {
           <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
             <button
               className="accordion-button collapsed"
+              style={style.accordionbtn}
               id="openbtn"
               type="button"
               data-bs-toggle="collapse"
@@ -103,6 +113,7 @@ function MenuAccordion() {
           <h2 className="accordion-header" id="panelsStayOpen-headingThree">
             <button
               className="accordion-button collapsed"
+              style={style.accordionbtn}
               id="openbtn"
               type="button"
               data-bs-toggle="collapse"

@@ -24,8 +24,8 @@ import { infomcartclick } from "../redux/Global/globalstate";
 // import {  addorders} from "../../redux/feature/order/Orders";
 const style = {
   image: {
-    width: "60px",
-    heigth: "60px",
+    width: "100px",
+    heigth: "100px",
   },
   addbtn: {
     heigth: "60px",
@@ -44,7 +44,7 @@ export const MenuBox = (props) => {
   socket.emit("verifyitem",`Recievd Item:${Name}`)
   setverified(true)
   }
-  const should_blur = useSelector((state) => state.Gstate.iscartclicked);
+  // const should_blur = useSelector((state) => state.Gstate.iscartclicked);
 
   //     function Toast(){
   //         // <!-- Flexbox container for aligning the toasts -->
@@ -69,7 +69,7 @@ export const MenuBox = (props) => {
   const itemName = props.name;
   // const dispatch = useDispatch()
   const cartquantity = useSelector((state) => state.quantity.value);
-  const cartopend = useSelector((state)=>state.Gstate.iscartclicked)
+  // const cartopend = useSelector((state)=>state.Gstate.iscartclicked)
 
   // const[total,settotal] = useState(0)
   // const finalyarray = useSelector(state=>state.orders.FinalyOrderArray)
@@ -80,6 +80,15 @@ export const MenuBox = (props) => {
   const [selected, setselected] = useState(false);
 
   const cart_reset = useSelector((state) => state.cart_reset.value);
+  const checkedout = useSelector((state)=>state.Gstate.checkoutstatus);
+  useEffect(()=>{
+    if(quantity===0){
+      console.log("Value of selected: ",selected);
+      setselected(false)
+      console.log("This part is working....");
+      console.log("Value of selected: ",selected);
+    }
+  },[quantity])
   // useEffect(()=>{
   // if(!verified){
   //   socket.emit("verifyitem",'testing verifyitem')
@@ -126,7 +135,7 @@ export const MenuBox = (props) => {
     if (cartquantity > 0) {
       dispatch(decrement());
     }
-    dispatch(infomcartclick());
+    // dispatch(infomcartclick());
 
     // dispatch(removeOrder(props.name))
   }
@@ -143,7 +152,12 @@ export const MenuBox = (props) => {
    
     // console.log("value of cartreset: ",cart_reset);
     // setreseted(cart_reset)
-  }, [cart_reset,cartopend]);
+  }, [cart_reset]);
+  useEffect(()=>{
+    setquantity(0)
+    // setselected(false)
+    // setadd(false)
+  },[checkedout])
   //------------------------------------ Handle Add Function ---------------------------------------------------------//
   function handleadd() {
     // if(quantity!==0){
@@ -158,7 +172,7 @@ export const MenuBox = (props) => {
     // dispatch(reduceamount(prevtotal));
     dispatch(addamount(total));
     dispatch(
-      addorders({ ITEM: { Name: itemName, Quantity: quantity, Price: price } })
+      addorders({ Name: itemName, Quantity: quantity, Price: price } )
     );
     console.log("CartItems in MenuBox: ", cartitems);
     console.log("OrderArray: ", orderarr);
@@ -205,18 +219,18 @@ export const MenuBox = (props) => {
             />
             {added?(
               <button
-                disabled={(!selected || should_blur) && true}
+                // disabled={(!selected) && true}
                 id="addbtn"
-                className="btn btn-sm my-3 "
+                className="btn btn-sm my-4 "
               >
                 ✅Added
               </button>
             ) : (
               <button
-                disabled={(!selected || should_blur) && true}
+                disabled={(!selected ||quantity==='0') && true}
                 id="addbtn"
                 onClick={handleadd}
-                className="btn btn-sm my-3 "
+                className="btn btn-sm my-4 "
               >
                 Add
               </button>

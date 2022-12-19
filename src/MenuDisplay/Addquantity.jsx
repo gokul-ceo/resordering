@@ -9,6 +9,7 @@ const style = {
     display: "flex",
     padding: "2px",
     justifyContent: "space-between",
+    marginTop:'10px',
     marginLeft: "5rem",
     position: "relative",
     bottom: "-7px",
@@ -38,7 +39,7 @@ const style = {
 };
 
 function AddQuantity(props) {
-  const should_blur = useSelector((state) => state.Gstate.iscartclicked);
+  // const should_blur = useSelector((state) => state.Gstate.iscartclicked);
 
   // const[quantity,setquantity]=useState(1)
   // function handleclick(e){
@@ -56,7 +57,7 @@ function AddQuantity(props) {
       <div style={style.maindiv} className="container-sm ">
         <button
           onClick={props.add}
-          disabled={(props.hide || should_blur) && true}
+          disabled={(props.hide) && true}
           style={style.btn}
         >
           <span title="add" style={style.btnspan}>
@@ -66,7 +67,7 @@ function AddQuantity(props) {
         <span style={style.spantext}>{props.quantity}</span>
         <button
           onClick={props.sub}
-          disabled={(props.hide || should_blur) && true}
+          disabled={(props.hide) && true}
           style={style.btn}
         >
           <span title="sub" style={style.btnspan}>

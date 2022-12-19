@@ -1,11 +1,16 @@
 import React, {  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { infomcartclick } from "../redux/Global/globalstate";
+import {  changecheckoutstatus, change_name,change_phone, infomcartclick } from "../redux/Global/globalstate";
 import { setdetails_collected } from "../redux/Global/globalstate";
 import socket from "../socket";
 import {Modal} from "react-bootstrap";
 import styled from 'styled-components'
 import {load_user_details, save_user_details } from "../worker";
+import { resetOrderArray } from "../redux/feature/order/Orders";
+import { resetquantity } from "../redux/feature/Quantity/quantitySlice";
+import { INFO_RESET_DONE, informreset } from "../redux/feature/reset/reset";
+import { Cart } from "../cart/cart";
+export var cartitems = [];
 const Checkoutbtn = styled.button`
 color:white;
 border-radius:10px;
@@ -57,6 +62,7 @@ const style = {
   //     margin:'0.8rem 0 0 0'
   // }
 };
+
 function MyVerticallyCenteredModal(props) {
   return (
     <Modal
@@ -93,6 +99,7 @@ function MyVerticallyCenteredModal(props) {
   );
 }
 function Getuserdata(props) {
+  const dispatch = useDispatch()
   const[nameerror,setnameerror] = useState(false)
   const[phoneerror,setphoneerrror] = useState(false)
   const[name,setname] = useState(null);
@@ -104,8 +111,10 @@ function Getuserdata(props) {
       setnameerror(true)
       setphoneerrror(true)
     }
-    else{
+    else{    
     save_user_details(name,phone)
+    dispatch(change_name())
+    dispatch(change_phone())
     props.onHide()
     load_user_details()
     }
@@ -175,6 +184,7 @@ function OrderFooter() {
   // console.log("Itemsfortotal: ",Itemsfortotal);
   // Check_ifuserexist()
   var get =  useSelector(state=>state.Gstate.getusername)
+  var cartopen = useSelector(state=>state.Gstate.iscartclicked)
   // useEffect(()=>{
   //   if (localStorage.getItem("UserName")!==null) {
   //     get = false
@@ -186,6 +196,7 @@ function OrderFooter() {
   // console.log("Localstorage: ",localStorage.getItem());
   // const[get,setget] = useState(useSelector(state=>state.Gstat.getusername))
   const[show,setshow] = useState(false)
+  const[cartshow,setcartshow] = useState(false)
  const OrderArray = useSelector(state=>state.orders.OrderArray)
   function handlecheckout(){
     console.log("checkout working!!");
@@ -194,13 +205,25 @@ function OrderFooter() {
       console.log("order array from checkout: ",OrderArray);
     socket.emit("handlecheckout",OrderArray )
     }
+    dispatch(resetOrderArray())
+    dispatch(resetquantity())
+    dispatch(INFO_RESET_DONE())
+    dispatch(informreset())
+    dispatch(changecheckoutstatus())
+    // dispatch(i)
+
     // socket.on("menulist",(arg)=>{
     //   console.log("menu:",arg);
     // })
+
   }
   // useEffect(()=>{
   //   setget(get)
   // },)
+  function handlecartbtnclick(){
+    dispatch(infomcartclick())
+    // setcartshow(true)
+  }
   const amount = useSelector((state) => state.total.total);
   const dispatch = useDispatch();
   // console.log("Total Amount: ",amount);
@@ -220,7 +243,7 @@ function OrderFooter() {
           </button>
           <button
             style={style.cartbtn}
-            onClick={() => dispatch(infomcartclick())}
+            onClick={handlecartbtnclick}
             type="button"
           >
             <i style={style.icon} className="fa-solid fa-cart-shopping"></i>{" "}
@@ -241,7 +264,10 @@ function OrderFooter() {
         {/* <button variant="primary" onClick={() => setshow(true)}>
         Launch vertically centered modal
       </button> */}
-     
+      {/* <Cart show={cartshow} onHide={()=>setcartshow(false)} /> */}
+      {/* <Mycart show={cartshow} onHide={()=>setcartshow(false)}/>
+       */}
+       <Cart show={cartopen} onHide={()=>dispatch(infomcartclick())}/>
       <MyVerticallyCenteredModal
         show={show}
         onHide={() => setshow(false)}

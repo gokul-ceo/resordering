@@ -2,13 +2,14 @@ import React, {  useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider, useDispatch } from "react-redux";
 import OrderHeader from "./OrderHeader";
-import OrderType from "./OrderType";
+// import OrderType from "./OrderType";
 import MenuDisplay from "./MenuDisplay/MenuDisplay";
 import store from "./redux/store";
 import OrderFooter from "./OrderFooter/Orderfooter";
 import { Cart } from "./cart/cart";
 import socket from "./socket";
 import { informpageloaded } from "./redux/Global/globalstate";
+import { save_sockid } from "./worker";
 
 // import axios from "axios";
 
@@ -31,6 +32,7 @@ function App() {
   if (!connected) {
     socket.on("connect",()=>{  
       console.log("Connect with id: ",socket.id);
+      save_sockid(socket.id)
       setconnected(true)
     // io.on("verifyitem",'hello')
 
@@ -54,7 +56,7 @@ function App() {
     // userverified?
     <Provider store={store}>
     <OrderHeader />
-    <OrderType />
+    {/* <OrderType /> */}
     <MenuDisplay />
     <OrderFooter />
     <Cart/>
