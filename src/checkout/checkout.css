@@ -1,0 +1,22 @@
+.checkout_div{
+    background-color: white;
+    height: 740px;
+}
+
+.StyledReceipt {
+    text-align: center;
+    align-items: center;
+    background: #CDD2D7;
+    width: 21rem;
+    overflow: auto;
+    margin-top: 10px;
+    margin-left: 0.8rem;
+    /* padding: 2rem 1rem 2rem; */
+    --mask: conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 80%/10px 100%;
+    -webkit-mask: var(--mask);
+            mask: var(--mask);
+  }
+
+tr{
+    margin-top: 2rem;
+}

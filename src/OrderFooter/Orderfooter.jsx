@@ -1,11 +1,11 @@
 import React, {  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {  changecheckoutstatus, change_name,change_phone, infomcartclick } from "../redux/Global/globalstate";
 import { setdetails_collected } from "../redux/Global/globalstate";
 import socket from "../socket";
 import {Modal} from "react-bootstrap";
 import styled from 'styled-components'
-import {load_user_details, save_user_details } from "../worker";
 import { resetOrderArray } from "../redux/feature/order/Orders";
 import { resetquantity } from "../redux/feature/Quantity/quantitySlice";
 import { INFO_RESET_DONE, informreset } from "../redux/feature/reset/reset";
@@ -98,79 +98,29 @@ function MyVerticallyCenteredModal(props) {
     </Modal>
   );
 }
-function Getuserdata(props) {
-  const dispatch = useDispatch()
-  const[nameerror,setnameerror] = useState(false)
-  const[phoneerror,setphoneerrror] = useState(false)
-  const[name,setname] = useState(null);
-  const[phone,setphone] = useState(null);
-   function handlesumbit(){
-    console.log("Name: ",name);
-    console.log("Phone: ",phone);
-    if(name===null&&phone===null){
-      setnameerror(true)
-      setphoneerrror(true)
-    }
-    else{    
-    save_user_details(name,phone)
-    dispatch(change_name())
-    dispatch(change_phone())
-    props.onHide()
-    load_user_details()
-    }
-  }
-  function handlenamechange(e){
-    setname(e.target.value)
-    setnameerror(false)
-  }
-  function handlephonechange(e){
-    setphone(e.target.value)
-    setphoneerrror(false)
-  }
-  // function handleinputchange(e){
-  //   if (e.target.type==='text') {
+// function Getuserdata(props) {
+//   const dispatch = useDispatch()
+//   const[nameerror,setnameerror] = useState(false)
+//   const[phoneerror,setphoneerrror] = useState(false)
+// 
+//    function handlesumbit(){
+//     // localStorage.setItem('Customerid',customerid)
+//     // console.log("customerid: ",customerid);
+//     console.log("Name: ",name);
+//     console.log("Phone: ",phone);
+//     if(name===null&&phone===null){
+//       setnameerror(true)
+//       setphoneerrror(true)
+//     }
+//     else{    
+//     save_user_details(name,phone)
+//     dispatch(change_name())
+//     dispatch(change_phone())
+//     props.onHide()
+//     load_user_details()
+//     }
+//   }
 
-  //     setname(e.target.value)
-  //   } else {
-  //     setphone(e.target.value)
-  //   }
-  // }
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      // className="bg-success"
-    >
-      <Modal.Header>
-        <Modal.Title id="contained-modal-title-vcenter" >
-          
-        <iframe title="userdetails" src="https://embed.lottiefiles.com/animation/72874"></iframe>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <form>
-          <div className="mb-3"  >
-            <div>
-            <label for="userdatacollection" className="form-label">Name</label>
-            <input type="text" onChange={handlenamechange} className="form-control"/>
-            {nameerror&&<span>please enter your name!</span>}
-            </div>
-            <div>
-            <label for="userdatacollection" className="form-label">Phone Number</label>
-            <input type="Number" onChange={handlephonechange} className="form-control"/>
-            {phoneerror&&<span>please enter your phonenumber properly!</span>}
-            </div>
-          </div>
-        </form>
-      </Modal.Body>
-      <Modal.Footer>
-        <button onClick={handlesumbit}>Submit</button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
 // function Check_ifuserexist(){
 //   const dispatch = useDispatch()
 //   if(check_user_details()===true){
@@ -178,6 +128,7 @@ function Getuserdata(props) {
 //   }
 // }
 function OrderFooter() {
+  const navigate = useNavigate()
   // const toshow = useSelector(state=>state.Gstate.isdetails_collected)
   // const totalamount = useSelector(state=>state.total.value)
   // const Itemsfortotal = useSelector(state=>state.total.Itemsfortotal)
@@ -198,24 +149,30 @@ function OrderFooter() {
   const[show,setshow] = useState(false)
   const[cartshow,setcartshow] = useState(false)
  const OrderArray = useSelector(state=>state.orders.OrderArray)
-  function handlecheckout(){
+ async function handlecheckout(){
     console.log("checkout working!!");
     console.log("checkout orderarray: ",OrderArray);
     if(OrderArray.length!==0){
       console.log("order array from checkout: ",OrderArray);
-    socket.emit("handlecheckout",OrderArray )
+      var token = sessionStorage.getItem('Customertoken')
+      const requestoption = {
+        method:'POST',
+        headers: {
+          'content-Type':'application/json',
+          'Authorization': 'Bearer '+token,
+        },
+        body: JSON.stringify(OrderArray)
+    };
+    const response = await fetch('http://localhost:4000/hsscheckout',requestoption);
+    const data =await response.json()
+    console.log("DAte from response: ",data);
+    navigate(`/order/${data}`)
     }
     dispatch(resetOrderArray())
     dispatch(resetquantity())
-    dispatch(INFO_RESET_DONE())
     dispatch(informreset())
+    dispatch(INFO_RESET_DONE())
     dispatch(changecheckoutstatus())
-    // dispatch(i)
-
-    // socket.on("menulist",(arg)=>{
-    //   console.log("menu:",arg);
-    // })
-
   }
   // useEffect(()=>{
   //   setget(get)
@@ -271,11 +228,6 @@ function OrderFooter() {
       <MyVerticallyCenteredModal
         show={show}
         onHide={() => setshow(false)}
-      />
-       <Getuserdata
-        show={get}
-        onHide={()=>dispatch(setdetails_collected())}
-        backdrop="static"
       />
         <Checkoutbtn onClick={handlecheckout} >
           Order Now

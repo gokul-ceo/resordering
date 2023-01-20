@@ -1,70 +1,30 @@
 import React, {  useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Provider, useDispatch } from "react-redux";
-import OrderHeader from "./OrderHeader";
+import {Navigate }from 'react-router-dom';
+import PrivateRoute from "./Auth";
+import { BrowserRouter, Routes, Route, useNavigate,Redirect} from "react-router-dom";
 // import OrderType from "./OrderType";
-import MenuDisplay from "./MenuDisplay/MenuDisplay";
-import store from "./redux/store";
-import OrderFooter from "./OrderFooter/Orderfooter";
-import { Cart } from "./cart/cart";
-import socket from "./socket";
-import { informpageloaded } from "./redux/Global/globalstate";
-import { save_sockid } from "./worker";
-
-// import axios from "axios";
-
-// import  { useMediaQuery } from 'media-query-react';
-
+import Homeorder from "./Homeorder";
+import Loginpage from "./Loginorder/login";
+import Checkout from "./checkout/checkout";
 function App() {
-  const dispatch = useDispatch()
-  function check_user_exist(){
-    if(localStorage.getItem('UserName')!==null){
-      dispatch(informpageloaded())
-    }
-  }
-  const[connected,setconnected] = useState(false)
-  // const [modalShow, setModalShow] = useState(false);
-  // const[userverified,setuserverified] = useState(false)
-  useEffect(()=>{
-    check_user_exist()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  if (!connected) {
-    socket.on("connect",()=>{  
-      console.log("Connect with id: ",socket.id);
-      save_sockid(socket.id)
-      setconnected(true)
-    // io.on("verifyitem",'hello')
-
-    })
-  } else {
-    console.log("Already connected!");
-  }
-  // const isDesktop = useMediaQuery({query:'min-width:1024px'})
-  // axios.get('http://localhost:4000/')
-  // .then((response)=>{
-  //   console.log("Msg from server: ",response.data);
-  // })
-  const isDesktop = false;
-  console.log("isDesktopOrLaptop: ",isDesktop);
   return (
     <>
-    {isDesktop?
-    <>
-    <h4>Sorry!! This page can be viewed only by mobile devices</h4>
-    </>:
-    // userverified?
-    <Provider store={store}>
-    <OrderHeader />
-    {/* <OrderType /> */}
-    <MenuDisplay />
-    <OrderFooter />
-    <Cart/>
-  </Provider>
-    }
-      
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={
+        <PrivateRoute>
+           <Homeorder/>
+        </PrivateRoute>
+     }/>
+      <Route path="login" element={<Loginpage/>}/>
+      <Route path="order">
+        <Route path=":orderid" element={<Checkout/>} />
+      </Route>
+    </Routes>
+    </BrowserRouter>
     </>
-  );
-}
+  )};
+
 
 export default App;

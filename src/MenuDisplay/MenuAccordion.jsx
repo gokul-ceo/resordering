@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MenuBox } from "./MenuBox";
 import "./MenuBox.css";
@@ -7,10 +7,13 @@ import idlyimg from './idly.png'
 import dosaimg from './dosa.png'
 import vadaiimg from './vadai.png'
 import pooriimg from './poori.png'
+import image from './image.png'
+import Loader from "./Loader";
 // import axios from 'axios'
 // import {socket} from './socket.js'
 // const Menulist = []
 function MenuAccordion() {
+  const[loading,setloading]=useState(true)
 //  axios.get("http://localhost:4000/")
 //  .then(function(response){
 //   console.log("Response from server: ",response);
@@ -37,13 +40,28 @@ function MenuAccordion() {
   // socket.on("menulist",(arg)=>{
   //   console.log("Menu recieved from server: ",arg);
   //   Menulist.push(arg)
-
+  const[menu,setmenu] = useState([])
   // })
   // for(let i=0;i<=Menulist.length;i++){
   //   console.log(Menulist[i]);
   // }
  
   // console.log("Menu list from socket: ",menulist);
+  useEffect(()=>{
+    setloading(true)
+    fetch('http://localhost:4000/admindata/availablemenuitems',{
+      method:'GET',
+      headers:{
+          'Accept':'application/json'
+      }
+  }).then((response)=>response.json())
+  .then((json)=>{
+      setmenu(json);
+       console.log("Menulist: ",json);
+       setloading(false)
+      
+  })
+  },[])
   return (
     <>
       <div
@@ -60,7 +78,7 @@ function MenuAccordion() {
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#panelsStayOpen-collapseOne"
-              aria-expanded="true"
+              aria-expanded="false"
               aria-controls="panelsStayOpen-collapseOne"
             >
               Idly types
@@ -73,14 +91,14 @@ function MenuAccordion() {
           >
             <div className="accordion-body">
               <MenuBox price={"5"} img={idlyimg} name={"Idly"} />
-              <MenuBox price={"5"} img={dosaimg} name={"Dosa"} />
+              <MenuBox price={"5"} img={dosaimg} name={"Plain Dosa"} />
               <MenuBox price={"5"} img={vadaiimg} name={"Vadai"} />
               <MenuBox price={"5"} img={pooriimg} name={"pongal"} />
-              <MenuBox price={"5"} img={idlyimg} name={"masala dosai"} />
+              <MenuBox price={"5"} img={idlyimg} name={"masala dosa"} />
             </div>
           </div>
         </div>
-        <div className="accordion-item" id="accordion-title">
+        {/* <div className="accordion-item" id="accordion-title">
           <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
             <button
               className="accordion-button collapsed"
@@ -101,14 +119,14 @@ function MenuAccordion() {
             aria-labelledby="panelsStayOpen-headingTwo"
           >
             <div className="accordion-body">
-              {/* <MenuBox />
-              <MenuBox />
-              <MenuBox />
-              <MenuBox />
-              <MenuBox /> */}
+            <MenuBox price={"5"} img={idlyimg} name={"Idly"} />
+              <MenuBox price={"5"} img={dosaimg} name={"Plain Dosa"} />
+              <MenuBox price={"5"} img={vadaiimg} name={"Vadai"} />
+              <MenuBox price={"5"} img={pooriimg} name={"pongal"} />
+              <MenuBox price={"5"} img={idlyimg} name={"masala dosa"} />
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="accordion-item" id="accordion-title">
           <h2 className="accordion-header" id="panelsStayOpen-headingThree">
             <button
@@ -129,13 +147,18 @@ function MenuAccordion() {
             className="accordion-collapse collapse"
             aria-labelledby="panelsStayOpen-headingThree"
           >
-            <div className="accordion-body">
-              {/* <MenuBox />
-              <MenuBox />
-              <MenuBox />
-              <MenuBox />
-              <MenuBox /> */}
-            </div>
+           { loading?
+           <>
+           <Loader/>
+           <Loader/>
+           <Loader/>
+           <Loader/>
+           <Loader/>
+           </>:<div className="accordion-body">
+              { menu.map((element)=>{
+                return <MenuBox status={element.Available} price={element.Price} img={image} name={element.Item} />
+              }) }
+            </div>}
           </div>
         </div>
       </div>

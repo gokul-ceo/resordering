@@ -1,12 +1,14 @@
 import React, {  useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import img from "./image.png";
+import loading from './loading.jfif'
 import "./MenuBox.css";
 import AddQuantity from "./Addquantity";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, } from "react-redux";
 import { addorders } from "../redux/feature/order/Orders";
 // import { socketContext } from "../App";
 import socket from "../socket";
+import star from './star.png'
 
 
 import {
@@ -15,6 +17,7 @@ import {
 } from "../redux/feature/Quantity/quantitySlice";
 import { addamount } from "../redux/feature/total/totalSlice";
 import { infomcartclick } from "../redux/Global/globalstate";
+import { UPDATE_MENU_STATUS } from "../redux/Menustate/Menu_states_Slice";
 // import { RemoveOrderfromarray } from "../../cart/cart";
 // import { removeOrderfromarray } from "../../cart/cart";
 // import { updatearray } from "../../cart/cart";
@@ -24,8 +27,8 @@ import { infomcartclick } from "../redux/Global/globalstate";
 // import {  addorders} from "../../redux/feature/order/Orders";
 const style = {
   image: {
-    width: "100px",
-    heigth: "100px",
+    width: "80px",
+    heigth: "80px",
   },
   addbtn: {
     heigth: "60px",
@@ -34,16 +37,33 @@ const style = {
     fontSize: "12px",
   },
 };
+
 var total = 0;
 export const MenuBox = (props) => {
+  var status = props.status
+  const [hide,sethide] = useState(false)
+
   const[verified,setverified] = useState(false)
+  const[isavailable,setavailable] = useState(false)
+  var price = props.price
+  useEffect(()=>{
+    if(!status){
+     sethide(true)
+    }else if (status){
+      setavailable(true)
+    }
+  },[status])
+  // const menustatuslist = useSelector((state)=>state.menustatus.Menustates)
   // const socket = useContext(socketContext)
-  // console.log("socket: ",socket);
-  const Name = props.name;
-  if(!verified){
-  socket.emit("verifyitem",`Recievd Item:${Name}`)
-  setverified(true)
-  }
+  // console.log("socket: ",socket);  
+  // useEffect(()=>{
+  //   console.log(`${props.name} avaliablity from menubox is ${isavailable}`);
+  // },[isavailable])
+  // var Name,availability;
+  // const [testarray,settestarray] = useState({[Name]:availability})
+
+  // console.log("Testarray result: ",testarray);
+  
   // const should_blur = useSelector((state) => state.Gstate.iscartclicked);
 
   //     function Toast(){
@@ -64,9 +84,13 @@ export const MenuBox = (props) => {
   //   </div>
   // </div>
   //     }
-  const price = 5;
   const dispatch = useDispatch();
-  const itemName = props.name;
+  function cap(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  const itemName = cap(props.name);
+
+  
   // const dispatch = useDispatch()
   const cartquantity = useSelector((state) => state.quantity.value);
   // const cartopend = useSelector((state)=>state.Gstate.iscartclicked)
@@ -144,7 +168,7 @@ export const MenuBox = (props) => {
     // setorder({Name,quantity})
     // setreseted(cart_reset)
     // console.log("CART_RESET = ",cart_reset);
-  }, [quantity, itemName, price,]);
+  }, [quantity, itemName]);
   useEffect(() => {
     setquantity(0);
     setselected(false)
@@ -176,42 +200,31 @@ export const MenuBox = (props) => {
     );
     console.log("CartItems in MenuBox: ", cartitems);
     console.log("OrderArray: ", orderarr);
-    // removeOrderfromarray(props.name)
-
-    // <Toast/>
-    // console.log("Total: ",total);
-    // ORDER_ARRAY.push(order)
-    // console.log("Order: ",order);
-
-    // console.log("Result OrderArray: ",result);
-    // console.log(ORDER_ARRAY);
-    // socket.emit("verifyitem",'testing verifyitem')
 
   }
 
   // const result = useSelector(state=>state.orders.OrderArray)
   return (
     <>
-      <div className="container-sm ">
+      <div style={{'borderTop':'3px solid rgb(255, 97, 109)','borderRadius':'7px'}} className={hide?'container-sm d-none shadow shadow-lg mb-4':'container-sm shadow shadow-lg mb-4'}>
         <div className="row">
-          <div className="container-sm col">
+          <div className="container-sm my-2 col">
             <img style={style.image} src={props.img} alt="image_png" />
-            <h6 className="w-50 my-2">{props.name}</h6>
-            <span
-              style={{ fontSize: "12px", position: "relative", top: "-8px" }}
-            >
-              ⭐
-            </span>
+            <h6 className="w-50 my-2">{itemName}</h6>
+            <div style={{width:'40px','position':'relative','bottom':'7rem','left':'5rem','borderRadius':'2px'}} className="container ms-1 d-flex  bg-success">
+              <img alt="star.png" src={star}  style={{'width':'12px','height':'12px','margin':"3px 0 0 -8px"}}/>
+              <span style={{'margin':'0 1px 0 0','fontSize':'12px','fontWeight':'bold','color':'white'}}>4.5</span>
+            </div>
           </div>
           <div className="container-sm col text-end">
-            <span>₹7.99</span>
+            <span>{price}</span>
             <span style={style.note} className="text-muted">
               {" "}
               */piece
             </span>
             {/* <h6 className="text-muted">*min 3pcs required</h6> */}
             <AddQuantity
-              hide={added}
+              hide={added || !isavailable}
               add={handleinc}
               sub={handledec}
               remove={handledelete}
@@ -237,9 +250,11 @@ export const MenuBox = (props) => {
             )}
           </div>
         </div>
+        {/* {isavailable?<span class="badge text-bg-success">Available</span>:<span class="badge text-bg-danger">Not available</span>} */}
       </div>
 
-      <hr />
+      
     </>
   );
+ 
 };

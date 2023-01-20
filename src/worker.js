@@ -12,30 +12,25 @@ export function check_user_details(){
         return true
     }
 }
-export function load_user_details(){
-
-    const Name = localStorage.getItem('UserName')
-    const Phone = localStorage.getItem('Phone')
-    console.log("Name from localstorage: ",Name);
-    console.log("Phonenumber from localstorage: ",Phone);
+ 
     // if (Name!==null){
     //     return true
         
     // }else{
     //     return false
     // }
-}
-export function save_user_details(Name,phno){
-    localStorage.setItem('UserName',Name)
-    localStorage.setItem('Phone',phno)
 
-}
+// export function save_user_details(Name,phno){
+//     const customerid = Date.now()
+//     localStorage.setItem('Customerid',customerid)
+   
+//     // localStorage.setItem('Customer-id',customerid)
+
+// }
 export function save_sockid(id){
     localStorage.setItem("Id",id)
 }
-window.onload=(event) =>{
-    socket.emit("loadevent","loaded successfully!!")
-    console.log("load_user_details:",load_user_details());
+
     // Getuserdetails()
     // const dispatch = useDispatch();
 
@@ -64,10 +59,21 @@ function storageAvailable(type) {
     }
 }
 if(storageAvailable('localStorage')){
-    // localStorage.clear()
-    
-    load_user_details()
+    console.log("Strorage is available!");
 }else{
     console.log("No storage for us!!");
 }
+
+
+export function getitemstatus(){
+    var resultlist = []
+    fetch('http://localhost:4000/availablemenuitems',{
+        method:"GET"
+    })
+    .then((response)=>response.json())
+    .then((data)=>{
+        return data
+    })
+    // console.log("REsult list: ",resultlist);
+    
 }
