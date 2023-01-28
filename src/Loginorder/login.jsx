@@ -19,25 +19,27 @@ function Loginpage(){
         e.preventDefault();
         var customerid = Date.now()
         var data = {name,phone}
-        if(name && phone !== null){
-            setloading(true)
-            fetch(`http://localhost:4000/api/registercustomer/${customerid}`,{
-                method: 'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify(data)
+        navigate('/')
+        //should be uncommented during production...
+        // if(name && phone !== null){
+        //     setloading(true)
+        //     fetch(`http://localhost:4000/api/registercustomer/${customerid}`,{
+        //         method: 'POST',
+        //         headers:{
+        //             'Content-Type':'application/json'
+        //         },
+        //         body: JSON.stringify(data)
         
-            })
-            .then((response)=>response.json())
-            .then((json)=>{
-                sessionStorage.setItem("Customertoken", json);
-                sessionStorage.setItem('UserName',name)
-                sessionStorage.setItem('Phone',phone)
-                setloading(false)
-                navigate('/')
-            })
-        } 
+        //     })
+        //     .then((response)=>response.json())
+        //     .then((json)=>{
+        //         sessionStorage.setItem("Customertoken", json);
+        //         sessionStorage.setItem('UserName',name)
+        //         sessionStorage.setItem('Phone',phone)
+        //         setloading(false)
+        //         navigate('/')
+        //     })
+        // } 
 
         
     }
