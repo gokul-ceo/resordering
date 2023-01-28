@@ -107,10 +107,10 @@ export const MenuBox = (props) => {
   const checkedout = useSelector((state)=>state.Gstate.checkoutstatus);
   useEffect(()=>{
     if(quantity===0){
-      console.log("Value of selected: ",selected);
+      // console.log("Value of selected: ",selected);
       setselected(false)
-      console.log("This part is working....");
-      console.log("Value of selected: ",selected);
+      // console.log("This part is working....");
+      // console.log("Value of selected: ",selected);
     }
   },[quantity])
   // useEffect(()=>{

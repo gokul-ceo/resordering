@@ -1,0 +1,15 @@
+#scrollBox {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-x: auto;
+    -ms-overflow-y: hidden;
+    white-space: nowrap;
+}
+#scrollBox > div {
+    display: inline-block;
+    margin-right: 10px;
+}
+#scrollBox > div fieldset {
+    height: 200px;
+    width: 300px;
+}

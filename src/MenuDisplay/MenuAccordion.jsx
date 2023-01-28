@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import socket from "../socket";
 import { MenuBox } from "./MenuBox";
 import "./MenuBox.css";
 import { useSelector } from "react-redux";
@@ -14,6 +15,13 @@ import Loader from "./Loader";
 // const Menulist = []
 function MenuAccordion() {
   const[loading,setloading]=useState(true)
+  var sid;
+  if (socket.id !== localStorage.getItem('linkid')){
+    sid = socket.id
+  }else{
+    sid = localStorage.getItem('linkid')
+  }
+
 //  axios.get("http://localhost:4000/")
 //  .then(function(response){
 //   console.log("Response from server: ",response);
@@ -47,9 +55,13 @@ function MenuAccordion() {
   // }
  
   // console.log("Menu list from socket: ",menulist);
+  var socketid = socket.id
   useEffect(()=>{
     setloading(true)
-    fetch('http://localhost:4000/admindata/availablemenuitems',{
+  if(socketid!==undefined)
+  {  
+    console.log("Executing if block....");
+    fetch(`http://localhost:4000/admindata/availablemenuitems?linkid=${sid}}`,{
       method:'GET',
       headers:{
           'Accept':'application/json'
@@ -57,10 +69,26 @@ function MenuAccordion() {
   }).then((response)=>response.json())
   .then((json)=>{
       setmenu(json);
-       console.log("Menulist: ",json);
+      //  console.log("Menulist: ",json);
        setloading(false)
       
-  })
+  })}else{
+    console.log("Executing else block....");
+      console.log("Executing if  block in else block....");
+      fetch(`http://localhost:4000/admindata/availablemenuitems?linkid=${sid}}`,{
+        method:'GET',
+        headers:{
+            'Accept':'application/json'
+        }
+    }).then((response)=>response.json())
+    .then((json)=>{
+        setmenu(json);
+        //  console.log("Menulist: ",json);
+         setloading(false)
+        
+    })
+  }
+
   },[])
   return (
     <>

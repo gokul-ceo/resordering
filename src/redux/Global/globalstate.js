@@ -10,6 +10,7 @@ export const Globalstate = createSlice({
     isdetails_collected:false,
     username:'',
     phonenumer:'',
+    socketid:'',
     islocalstorage_available:false,
     checkoutstatus:false
   },
@@ -21,6 +22,10 @@ export const Globalstate = createSlice({
         state.iscartclicked = true;
       }
     },
+    savesocketid:(state,action)=>{
+      state.socketid = action.payload
+    }
+    ,
     changecheckoutstatus:(state)=>{
       state.checkoutstatus = true;
     },
@@ -45,5 +50,5 @@ export const Globalstate = createSlice({
   },
 });
 
-export const { infomcartclick,changecheckoutstatus,informpageloaded,setdetails_collected,change_name,change_phone} = Globalstate.actions;
+export const { infomcartclick,changecheckoutstatus,informpageloaded,setdetails_collected,change_name,change_phone,savesocketid} = Globalstate.actions;
 export default Globalstate.reducer;

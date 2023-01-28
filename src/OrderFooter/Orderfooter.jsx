@@ -136,6 +136,8 @@ function OrderFooter() {
   // Check_ifuserexist()
   var get =  useSelector(state=>state.Gstate.getusername)
   var cartopen = useSelector(state=>state.Gstate.iscartclicked)
+  const socketid =  useSelector((state)=>state.Gstate.socketid)
+  console.log("Socket id from redux = ",socketid);
   // useEffect(()=>{
   //   if (localStorage.getItem("UserName")!==null) {
   //     get = false
@@ -163,7 +165,9 @@ function OrderFooter() {
         },
         body: JSON.stringify(OrderArray)
     };
-    const response = await fetch('http://localhost:4000/hsscheckout',requestoption);
+    console.log("Socketid in localstorage:",localStorage.getItem('linkid'));
+    console.log('Sockedid value from moduel:',socket.id);
+    const response = await fetch(`http://localhost:4000/hsscheckout?linkid=${localStorage.getItem('linkid')||socket.id}`,requestoption);
     const data =await response.json()
     console.log("DAte from response: ",data);
     navigate(`/order/${data}`)

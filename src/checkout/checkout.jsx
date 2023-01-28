@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams,useNavigate } from 'react-router-dom';
 import os from './order.png'
+import socket from "../socket";
 import './checkout.css'
+import { useSelector } from "react-redux";
 const style = {
     orderhead: {
       height: "52px",
@@ -17,6 +19,8 @@ const style = {
 function Checkout(){
   const navigate = useNavigate()
   const [list,setlist] = useState([])
+  const [quantity,setquantity] = useState(0)
+  const [totalitem,settotalitem] = useState(0)
   var today = new Date()
   var dd = today.getDate();
         var mm = today.getMonth() + 1;
@@ -52,8 +56,17 @@ function Checkout(){
         removealert()
       }, 5000);
      },[])
+    //  console.log("Value of socketid in checkout:",localStorage.getItem('linkid'));
+    //  console.log("Value of socketid in checkout from module:",socket.id);
+     var sid;
+  if (socket.id !== localStorage.getItem('linkid')){
+    sid = socket.id
+  }else{
+    console.log("Id mismatch! we are using from module...");
+    sid = localStorage.getItem('linkid')
+  }
      useEffect(()=>{
-      fetch(`http://localhost:4000/checkout/orderdetails/${orderid}`,{
+      fetch(`http://localhost:4000/checkout/orderdetails/${orderid}?linkid=${sid}`,{
         method:'GET',
         headers:{
             'Accept':'application/json'
@@ -62,10 +75,17 @@ function Checkout(){
     .then((json)=>{
         // setMenulist(json);
         setlist(json)
+        settotalitem(json.length)
+        json.forEach(element => {
+          setquantity(quantity+element.Quantity)
+        });
          console.log(`Result from server =`,json);
         
     })
      },[orderid])
+     function Getsocketid(){
+      console.log("Socket id:",socket.id);
+     }
     return <>
     <div className="checkout_div">
      <div
@@ -78,8 +98,15 @@ function Checkout(){
       <div  id="alertdiv" className="alert  alert-success my-1" role="alert">
       <img  alt="order_placed" src={os} style={{'marginLeft':'14%','marginRight':'20px','width':'20px','height':'20px'}}/>
   Order has been placed!
-  <div style={{'backgroundColor':'white','width':'320px','margin':'5px auto -15px -10px'}}>
+  <div style={{'backgroundColor':'white','width':'320px','margin':'2px auto -15px auto'}}>
     <div id="alertprogressbar" style={{'height':'2px','width':'0px','backgroundColor':'green'}}></div>
+  </div>
+</div>
+<div  id="order_taken_div" className="alert  alert-success my-1" role="alert">
+      <img  alt="order_placed" src={os} style={{'marginLeft':'14%','marginRight':'20px','width':'20px','height':'20px'}}/>
+  Your order is getting ready!
+  <div style={{'backgroundColor':'white','width':'320px','margin':'5px auto -10px auto'}}>
+    <div id="ordertakenprogressbar" style={{'height':'2px','width':'20px','backgroundColor':'green'}}></div>
   </div>
 </div>
 
@@ -91,9 +118,12 @@ function Checkout(){
         <h6>Contact - 9965258727</h6>
 
         <div className="container d-flex justify-content-end">
-          <span style={{'width':'170px'}} >Bill No : 244</span>
+          <div className="container text-start">
+          <span style={{'width':'150px','display':'block'}} >Bill No : 244</span>
+          <span>Order Id : {orderid}</span>
+          </div>
           <div style={{'marginRight':'0px'}} className="container text-end">
-            <span  className="d-block">DATE:{TodayDate}</span>
+            <span  className="d-block">DATE : {TodayDate}</span>
             <span>TIME: 20:32</span>
           </div>
         </div>
@@ -122,7 +152,7 @@ function Checkout(){
         <hr className="my-1" style={{'borderTop':'2px dashed black','width':'232%','margin':'0 0 0 17px'}}/>
            <tr>
             <th colSpan={3}>
-              TOTAL ITEM(S): 1 /QTY:2.00
+              TOTAL ITEM(S): {totalitem} /QTY: {quantity}.00
             </th>
             <td style={{'margin':'0 0 0 10px',textAlign:'end'}}>10.00</td>
            </tr>
@@ -144,6 +174,10 @@ function Checkout(){
             </tbody>
           </table>
       
+      </div>
+      <div>
+        <button onClick={Getsocketid}>Get socket id</button>
+        
       </div>
       </div>
     </>
