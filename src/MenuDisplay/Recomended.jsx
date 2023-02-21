@@ -62,8 +62,6 @@ function Recommendeddiv(props){
 
     </div>
   </div>
-  <img alt="next" style={{'width':'20px','height':'20px','position':'relative','top':'-5rem'}} src={previous}/>
-  <img alt="next" style={{'width':'20px','height':'20px','position':'relative','top':'-5rem','right':'-21rem','rotate':'(360deg)'}} src={next}/>
 
   
 

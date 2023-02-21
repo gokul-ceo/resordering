@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { resetOrderArray } from "../redux/feature/order/Orders";
 import { resetquantity } from "../redux/feature/Quantity/quantitySlice";
@@ -8,7 +8,7 @@ import { resettotal } from "../redux/feature/total/totalSlice";
 import { infomcartclick } from "../redux/Global/globalstate";
 import "./cart.css";
 export var cartitems = [];
-
+const server_url = "http://localhost:4000/";
 export function Cart(props) {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.Gstate.iscartclicked);
@@ -26,11 +26,10 @@ export function Cart(props) {
     dispatch(resettotal());
     dispatch(resetOrderArray());
     dispatch(resetquantity());
-    
+
     setopen(false);
 
-    dispatch(INFO_RESET_DONE())
-    
+    dispatch(INFO_RESET_DONE());
   }
   // for (let index = 0; index < cartitems.length; index++) {
   //     // console.log("Cartitems individual: ",cartitems[index]);
@@ -108,19 +107,17 @@ export function Cart(props) {
           </table>
         </div>
       ) : null} */}
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Cart 
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <table className="">
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">Cart</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <table className="">
             <thead>
               <tr>
                 <th scope="col">Item</th>
@@ -142,11 +139,11 @@ export function Cart(props) {
               })}
             </tbody>
           </table>
-      </Modal.Body>
-      <Modal.Footer>
-        <button onClick={props.onHide}>Close</button>
-      </Modal.Footer>
-    </Modal>
+        </Modal.Body>
+        <Modal.Footer>
+          <button onClick={props.onHide}>Close</button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

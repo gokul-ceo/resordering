@@ -1,20 +1,16 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import img from "./image.png";
-import loading from './loading.jfif'
+import loading from "./loading.jfif";
 import "./MenuBox.css";
 import AddQuantity from "./Addquantity";
-import { useDispatch, useSelector, } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addorders } from "../redux/feature/order/Orders";
 // import { socketContext } from "../App";
 import socket from "../socket";
-import star from './star.png'
+import star from "./star.png";
 
-
-import {
-  decrement,
-  increment,
-} from "../redux/feature/Quantity/quantitySlice";
+import { decrement, increment } from "../redux/feature/Quantity/quantitySlice";
 import { addamount } from "../redux/feature/total/totalSlice";
 import { infomcartclick } from "../redux/Global/globalstate";
 import { UPDATE_MENU_STATUS } from "../redux/Menustate/Menu_states_Slice";
@@ -40,22 +36,22 @@ const style = {
 
 var total = 0;
 export const MenuBox = (props) => {
-  var status = props.status
-  const [hide,sethide] = useState(false)
+  var status = props.status;
+  const [hide, sethide] = useState(false);
 
-  const[verified,setverified] = useState(false)
-  const[isavailable,setavailable] = useState(false)
-  var price = props.price
-  useEffect(()=>{
-    if(!status){
-     sethide(true)
-    }else if (status){
-      setavailable(true)
+  const [verified, setverified] = useState(false);
+  const [isavailable, setavailable] = useState(false);
+  var price = props.price;
+  useEffect(() => {
+    if (!status) {
+      sethide(true);
+    } else if (status) {
+      setavailable(true);
     }
-  },[status])
+  }, [status]);
   // const menustatuslist = useSelector((state)=>state.menustatus.Menustates)
   // const socket = useContext(socketContext)
-  // console.log("socket: ",socket);  
+  // console.log("socket: ",socket);
   // useEffect(()=>{
   //   console.log(`${props.name} avaliablity from menubox is ${isavailable}`);
   // },[isavailable])
@@ -63,7 +59,7 @@ export const MenuBox = (props) => {
   // const [testarray,settestarray] = useState({[Name]:availability})
 
   // console.log("Testarray result: ",testarray);
-  
+
   // const should_blur = useSelector((state) => state.Gstate.iscartclicked);
 
   //     function Toast(){
@@ -89,8 +85,8 @@ export const MenuBox = (props) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   const itemName = cap(props.name);
+  // const itemName = props.name;
 
-  
   // const dispatch = useDispatch()
   const cartquantity = useSelector((state) => state.quantity.value);
   // const cartopend = useSelector((state)=>state.Gstate.iscartclicked)
@@ -104,15 +100,15 @@ export const MenuBox = (props) => {
   const [selected, setselected] = useState(false);
 
   const cart_reset = useSelector((state) => state.cart_reset.value);
-  const checkedout = useSelector((state)=>state.Gstate.checkoutstatus);
-  useEffect(()=>{
-    if(quantity===0){
+  const checkedout = useSelector((state) => state.Gstate.checkoutstatus);
+  useEffect(() => {
+    if (quantity === 0) {
       // console.log("Value of selected: ",selected);
-      setselected(false)
+      setselected(false);
       // console.log("This part is working....");
       // console.log("Value of selected: ",selected);
     }
-  },[quantity])
+  }, [quantity]);
   // useEffect(()=>{
   // if(!verified){
   //   socket.emit("verifyitem",'testing verifyitem')
@@ -171,17 +167,17 @@ export const MenuBox = (props) => {
   }, [quantity, itemName]);
   useEffect(() => {
     setquantity(0);
-    setselected(false)
-    setadd(false);  
-   
+    setselected(false);
+    setadd(false);
+
     // console.log("value of cartreset: ",cart_reset);
     // setreseted(cart_reset)
   }, [cart_reset]);
-  useEffect(()=>{
-    setquantity(0)
+  useEffect(() => {
+    setquantity(0);
     // setselected(false)
     // setadd(false)
-  },[checkedout])
+  }, [checkedout]);
   //------------------------------------ Handle Add Function ---------------------------------------------------------//
   function handleadd() {
     // if(quantity!==0){
@@ -195,25 +191,58 @@ export const MenuBox = (props) => {
     total = quantity * price;
     // dispatch(reduceamount(prevtotal));
     dispatch(addamount(total));
-    dispatch(
-      addorders({ Name: itemName, Quantity: quantity, Price: price } )
-    );
+    dispatch(addorders({ Name: itemName, Quantity: quantity, Price: price }));
     console.log("CartItems in MenuBox: ", cartitems);
     console.log("OrderArray: ", orderarr);
-
   }
 
   // const result = useSelector(state=>state.orders.OrderArray)
   return (
     <>
-      <div style={{'borderTop':'3px solid rgb(255, 97, 109)','borderRadius':'7px'}} className={hide?'container-sm d-none shadow shadow-lg mb-4':'container-sm shadow shadow-lg mb-4'}>
+      <div
+        style={{
+          borderTop: "3px solid rgb(255, 97, 109)",
+          borderRadius: "7px",
+        }}
+        className={
+          hide
+            ? "container-sm d-none shadow shadow-lg mb-4"
+            : "container-sm shadow shadow-lg mb-4"
+        }
+      >
         <div className="row">
           <div className="container-sm my-2 col">
             <img style={style.image} src={props.img} alt="image_png" />
             <h6 className="w-50 my-2">{itemName}</h6>
-            <div style={{width:'40px','position':'relative','bottom':'7rem','left':'5rem','borderRadius':'2px'}} className="container ms-1 d-flex  bg-success">
-              <img alt="star.png" src={star}  style={{'width':'12px','height':'12px','margin':"3px 0 0 -8px"}}/>
-              <span style={{'margin':'0 1px 0 0','fontSize':'12px','fontWeight':'bold','color':'white'}}>4.5</span>
+            <div
+              style={{
+                width: "40px",
+                position: "relative",
+                bottom: "7rem",
+                left: "5rem",
+                borderRadius: "2px",
+              }}
+              className="container ms-1 d-flex  bg-success"
+            >
+              <img
+                alt="star.png"
+                src={star}
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  margin: "3px 0 0 -8px",
+                }}
+              />
+              <span
+                style={{
+                  margin: "0 1px 0 0",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                4.5
+              </span>
             </div>
           </div>
           <div className="container-sm col text-end">
@@ -230,7 +259,7 @@ export const MenuBox = (props) => {
               remove={handledelete}
               quantity={quantity}
             />
-            {added?(
+            {added ? (
               <button
                 // disabled={(!selected) && true}
                 id="addbtn"
@@ -240,7 +269,7 @@ export const MenuBox = (props) => {
               </button>
             ) : (
               <button
-                disabled={(!selected ||quantity==='0') && true}
+                disabled={(!selected || quantity === "0") && true}
                 id="addbtn"
                 onClick={handleadd}
                 className="btn btn-sm my-4 "
@@ -252,9 +281,6 @@ export const MenuBox = (props) => {
         </div>
         {/* {isavailable?<span class="badge text-bg-success">Available</span>:<span class="badge text-bg-danger">Not available</span>} */}
       </div>
-
-      
     </>
   );
- 
 };

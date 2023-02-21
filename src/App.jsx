@@ -13,9 +13,10 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/" element={
-        // <PrivateRoute>
+      
+        <PrivateRoute>
            <Homeorder/>
-        // </PrivateRoute>
+         </PrivateRoute>
      }/>
       <Route path="login" element={<Loginpage/>}/>
       <Route path="order">
